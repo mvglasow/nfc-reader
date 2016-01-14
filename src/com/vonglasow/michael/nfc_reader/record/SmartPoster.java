@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.anyro.nfc_reader.record;
+package com.vonglasow.michael.nfc_reader.record;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-import se.anyro.nfc_reader.NdefMessageParser;
-import se.anyro.nfc_reader.R;
+import com.vonglasow.michael.nfc_reader.R;
 import android.app.Activity;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
@@ -34,6 +33,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.vonglasow.michael.nfc_reader.NdefMessageParser;
 
 /**
  * A representation of an NFC Forum "Smart Poster".

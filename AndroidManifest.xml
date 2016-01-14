@@ -15,12 +15,12 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="se.anyro.nfc_reader"
+  package="com.vonglasow.michael.nfc_reader"
   android:versionCode="13"
   android:versionName="0.13"
   android:installLocation="auto">
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-feature android:name="android.hardware.nfc" />

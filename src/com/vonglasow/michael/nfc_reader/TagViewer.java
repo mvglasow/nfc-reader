@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.anyro.nfc_reader;
+package com.vonglasow.michael.nfc_reader;
 
 import java.nio.charset.Charset;
 import java.text.DateFormat;
@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.vonglasow.michael.nfc_reader.record.ParsedNdefRecord;
+
 import android.view.*;
-import se.anyro.nfc_reader.record.ParsedNdefRecord;
+import com.vonglasow.michael.nfc_reader.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -157,7 +159,8 @@ public class TagViewer extends Activity {
                 byte[] empty = new byte[0];
                 byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
                 Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                byte[] payload = dumpTagData(tag).getBytes();
+                //byte[] payload = dumpTagData(tag).getBytes();
+                byte[] payload = (intent.toString() + "\n" + intent.getExtras().toString() + "\n" + getHex(id)).getBytes();
                 NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
                 NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
                 msgs = new NdefMessage[] { msg };
