@@ -26,12 +26,16 @@ import java.util.Locale;
 import com.vonglasow.michael.nfc_reader.record.ParsedNdefRecord;
 
 import android.view.*;
+
 import com.vonglasow.michael.nfc_reader.R;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -144,6 +148,9 @@ public class TagViewer extends Activity {
 
     private void resolveIntent(Intent intent) {
         String action = intent.getAction();
+        Intent newIntent = new Intent(intent);
+        newIntent.setComponent(null);
+        List<ResolveInfo> lri = getPackageManager().queryIntentActivities(newIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
                 || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
                 || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
@@ -159,14 +166,29 @@ public class TagViewer extends Activity {
                 byte[] empty = new byte[0];
                 byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
                 Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                String output = intent.toString() + "\n" + intent.getExtras().toString() + "\n" + getHex(id) + "\nOther recipients:";
+                for (ResolveInfo ri : lri) {
+                	output = output + "\n" + ri.activityInfo.name;
+                	if (ri.activityInfo.name.equals(intent.getComponent().getClassName()))
+                		output = output + " (this Activity)";
+                }
                 //byte[] payload = dumpTagData(tag).getBytes();
-                byte[] payload = (intent.toString() + "\n" + intent.getExtras().toString() + "\n" + getHex(id)).getBytes();
+                byte[] payload = (output).getBytes();
                 NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
                 NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
                 msgs = new NdefMessage[] { msg };
             }
             // Setup the views
             buildTagViews(msgs);
+        }
+        // try to forward the Intent
+        if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+            for (ResolveInfo ri : lri) {
+            	if (!ri.activityInfo.name.equals(intent.getComponent().getClassName())) {
+            		newIntent.setClassName(ri.activityInfo.packageName, ri.activityInfo.name);
+            		startActivity(newIntent);
+            	}
+            }
         }
     }
 
