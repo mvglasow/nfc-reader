@@ -165,7 +165,7 @@ public class TagViewer extends Activity {
             	output = output + "\nData: " + intent.getDataString();
             	output = output + "\nType: " + intent.getType();
             }
-            output = output + "\n" + intent.getExtras().toString() + "\n" + getHex(id) + "\nOther recipients:";
+            output = output + "\n" + intent.getExtras().toString() + "\n" + Util.getHex(id) + "\nOther recipients:";
             for (ResolveInfo ri : lri) {
             	output = output + "\n" + ri.activityInfo.name;
             	if (ri.activityInfo.name.equals(intent.getComponent().getClassName()))
@@ -203,9 +203,9 @@ public class TagViewer extends Activity {
         StringBuilder sb = new StringBuilder();
         Tag tag = (Tag) p;
         byte[] id = tag.getId();
-        sb.append("Tag ID (hex): ").append(getHex(id)).append("\n");
-        sb.append("Tag ID (dec): ").append(getDec(id)).append("\n");
-        sb.append("ID (reversed): ").append(getReversed(id)).append("\n");
+        sb.append("Tag ID (hex): ").append(Util.getHex(id)).append("\n");
+        sb.append("Tag ID (dec): ").append(Util.getDec(id)).append("\n");
+        sb.append("ID (reversed): ").append(Util.getReversed(id)).append("\n");
 
         String prefix = "android.nfc.tech.";
         sb.append("Technologies: ");
@@ -264,42 +264,6 @@ public class TagViewer extends Activity {
         }
 
         return sb.toString();
-    }
-
-    private String getHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = bytes.length - 1; i >= 0; --i) {
-            int b = bytes[i] & 0xff;
-            if (b < 0x10)
-                sb.append('0');
-            sb.append(Integer.toHexString(b));
-            if (i > 0) {
-                sb.append(" ");
-            }
-        }
-        return sb.toString();
-    }
-
-    private long getDec(byte[] bytes) {
-        long result = 0;
-        long factor = 1;
-        for (int i = 0; i < bytes.length; ++i) {
-            long value = bytes[i] & 0xffl;
-            result += value * factor;
-            factor *= 256l;
-        }
-        return result;
-    }
-
-    private long getReversed(byte[] bytes) {
-        long result = 0;
-        long factor = 1;
-        for (int i = bytes.length - 1; i >= 0; --i) {
-            long value = bytes[i] & 0xffl;
-            result += value * factor;
-            factor *= 256l;
-        }
-        return result;
     }
 
     void buildTagViews(NdefMessage[] msgs) {
