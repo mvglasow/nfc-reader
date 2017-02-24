@@ -156,26 +156,33 @@ public class TagViewer extends Activity {
                 || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage[] msgs;
+            
+            byte[] empty = new byte[0];
+            byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
+            Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            String output = intent.toString();
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            	output = output + "\nData: " + intent.getDataString();
+            	output = output + "\nType: " + intent.getType();
+            }
+            output = output + "\n" + intent.getExtras().toString() + "\n" + getHex(id) + "\nOther recipients:";
+            for (ResolveInfo ri : lri) {
+            	output = output + "\n" + ri.activityInfo.name;
+            	if (ri.activityInfo.name.equals(intent.getComponent().getClassName()))
+            		output = output + " (this Activity)";
+            }
+            byte[] dumpedIntent = (output).getBytes();
+            NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, dumpedIntent);
+            NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
+                    
             if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
+                msgs = new NdefMessage[rawMsgs.length + 1];
+                msgs[0] = msg;
                 for (int i = 0; i < rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                }
+                    msgs[i + 1] = (NdefMessage) rawMsgs[i];
+                } 
             } else {
                 // Unknown tag type
-                byte[] empty = new byte[0];
-                byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
-                Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                String output = intent.toString() + "\n" + intent.getExtras().toString() + "\n" + getHex(id) + "\nOther recipients:";
-                for (ResolveInfo ri : lri) {
-                	output = output + "\n" + ri.activityInfo.name;
-                	if (ri.activityInfo.name.equals(intent.getComponent().getClassName()))
-                		output = output + " (this Activity)";
-                }
-                //byte[] payload = dumpTagData(tag).getBytes();
-                byte[] payload = (output).getBytes();
-                NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
-                NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
                 msgs = new NdefMessage[] { msg };
             }
             // Setup the views
@@ -305,15 +312,17 @@ public class TagViewer extends Activity {
         // Parse the first message in the list
         // Build views for all of the sub records
         Date now = new Date();
-        List<ParsedNdefRecord> records = NdefMessageParser.parse(msgs[0]);
-        final int size = records.size();
-        for (int i = 0; i < size; i++) {
-            TextView timeView = new TextView(this);
-            timeView.setText(TIME_FORMAT.format(now));
-            content.addView(timeView, 0);
-            ParsedNdefRecord record = records.get(i);
-            content.addView(record.getView(this, inflater, content, i), 1 + i);
-            content.addView(inflater.inflate(R.layout.tag_divider, content, false), 2 + i);
+        for (NdefMessage msg : msgs) {
+        	List<ParsedNdefRecord> records = NdefMessageParser.parse(msg);
+        	final int size = records.size();
+        	for (int i = 0; i < size; i++) {
+        		TextView timeView = new TextView(this);
+        		timeView.setText(TIME_FORMAT.format(now));
+        		content.addView(timeView, 0);
+        		ParsedNdefRecord record = records.get(i);
+        		content.addView(record.getView(this, inflater, content, i), 1 + i);
+        		content.addView(inflater.inflate(R.layout.tag_divider, content, false), 2 + i);
+        	}
         }
     }
 
