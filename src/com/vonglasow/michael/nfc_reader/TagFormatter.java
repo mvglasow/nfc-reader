@@ -105,6 +105,7 @@ public class TagFormatter extends Activity implements View.OnClickListener {
     	if (tag == null)
     		return;
     	
+    	mText.setText(R.string.formatting);
     	mButton.setVisibility(View.GONE);
 
     	FormatJob job = new FormatJob(tag, mMessage);
