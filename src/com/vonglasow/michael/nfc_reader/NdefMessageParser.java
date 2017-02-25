@@ -64,7 +64,7 @@ public class NdefMessageParser {
 				        TextView text = (TextView) inflater.inflate(R.layout.tag_text, parent, false);
 				        String data = dumpHeader(record);
 				        
-				        data = data + "\n" + Util.dump(record.getPayload());
+				        data = data + "\nPayload: " + Util.dump(record.getPayload());
 				        
 				        text.setText(data);
 				        return text;

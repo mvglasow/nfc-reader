@@ -60,7 +60,7 @@ public class Util {
 			if ((array[i] < 32) && (array[i] != 10))
 				isText = false;
 		
-		return "Payload: " + (isText ? new String(array) : getHex(array));
+		return (isText ? new String(array) : getHex(array));
 	}
 
 	static void showWirelessSettingsDialog(final Activity activity) {
