@@ -30,4 +30,5 @@
     <string name="write_error">An error occurred while writing to the tag</string>
     <string name="tag_lost">The tag was removed before the action completed, try again</string>
     <string name="format_successful">Tag formatted successfully</string>
+    <string name="format_another">Format another tag</string>
 </resources>

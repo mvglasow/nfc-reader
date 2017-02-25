@@ -19,14 +19,19 @@ import android.nfc.tech.NdefFormatable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class TagFormatter extends Activity {
+public class TagFormatter extends Activity implements View.OnClickListener {
 	
     private static String MIME_TYPE = "application/prs.com.vonglasow.michael.nfc_reader";
 
 	private TextView mText;
+	private Button mButton;
+
+	private Boolean isArmed = true;
 
     private NfcAdapter mAdapter;
     private PendingIntent mPendingIntent;
@@ -35,16 +40,29 @@ public class TagFormatter extends Activity {
     private NdefMessage mMessage;
     
 	@Override
+	public void onClick(View v) {
+		if (v == mButton) {
+			isArmed = true;
+			mText.setText(R.string.badge_tag);
+			mButton.setVisibility(View.GONE);
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_formatter);
 		mText = (TextView) findViewById(R.id.tag_formatter_text);
+		mButton = (Button) findViewById(R.id.format_another_button);
 		
         mAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mAdapter == null) {
         	mText.setText(R.string.no_nfc);
             return;
         }
+
+		mButton.setVisibility(View.GONE);
+		mButton.setOnClickListener(this);
 
         mPendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -79,11 +97,16 @@ public class TagFormatter extends Activity {
     }
 
     private void resolveIntent(Intent intent) {
+        if (!isArmed)
+            return;
+		
     	Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
     	
     	if (tag == null)
     		return;
     	
+    	mButton.setVisibility(View.GONE);
+
     	FormatJob job = new FormatJob(tag, mMessage);
     	
     	new FormatTask().execute(job);
@@ -172,6 +195,8 @@ public class TagFormatter extends Activity {
         protected void onPostExecute(Integer result) {
             // show success/failure message
         	mText.setText(result);
+        	mButton.setVisibility(View.VISIBLE);
+        	isArmed = false;
         }
     }
 }
