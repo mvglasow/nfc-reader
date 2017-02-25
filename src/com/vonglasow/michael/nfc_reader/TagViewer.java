@@ -41,6 +41,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.widget.LinearLayout;
@@ -240,6 +241,26 @@ public class TagViewer extends Activity {
                 }
                 sb.append("Mifare Ultralight type: ");
                 sb.append(type);
+            }
+            
+            if (tech.equals(Ndef.class.getName())) {
+            	sb.append('\n');
+            	Ndef ndefTag = Ndef.get(tag);
+            	
+            	sb.append("Ndef writable: ");
+            	sb.append(ndefTag.isWritable());
+                sb.append('\n');
+            	
+            	sb.append("Ndef canMakeReadOnly: ");
+            	sb.append(ndefTag.canMakeReadOnly());
+                sb.append('\n');
+            	
+            	sb.append("Ndef type: ");
+            	sb.append(ndefTag.getType());
+                sb.append('\n');
+            	
+            	sb.append("Ndef max size: ");
+            	sb.append(ndefTag.getMaxSize());
             }
         }
 
