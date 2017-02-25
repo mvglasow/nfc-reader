@@ -21,4 +21,13 @@
     <string name="no_nfc">No NFC found on this device</string>
     <string name="nfc_disabled">NFC is not enabled. Please go to the wireless settings to enable it.</string>
     <string name="menu_main_clear_title">Clear all</string>
+    <string name="menu_main_format_title">Format tag</string>
+    <string name="title_activity_tag_formatter">Format Tag</string>
+    <string name="badge_tag">Hold a tag/card against the back of your device to format it.\n\nCaution: All data on this tag will be ERASED!</string>
+    <string name="invalid_tag">This tag cannot be formatted.\nIt is either not an NDEF or NDEF-formatable tag, or your device does not support this tag.\nUse a different tag, or try with a different device</string>
+    <string name="tag_not_writable">This tag is write protected</string>
+    <string name="tag_size_exceeded">This tag\'s capacity is insufficient</string>
+    <string name="write_error">An error occurred while writing to the tag</string>
+    <string name="tag_lost">The tag was removed before the action completed, try again</string>
+    <string name="format_successful">Tag formatted successfully</string>
 </resources>

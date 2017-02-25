@@ -5,4 +5,9 @@
     android:showAsAction="always"
     android:title="@string/menu_main_clear_title"
       />
+  <item
+    android:id="@+id/menu_main_format"
+    android:showAsAction="always"
+    android:title="@string/menu_main_format_title"
+      />
 </menu>

@@ -32,7 +32,6 @@ import com.vonglasow.michael.nfc_reader.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -44,7 +43,6 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.Settings;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -112,7 +110,7 @@ public class TagViewer extends Activity {
         super.onResume();
         if (mAdapter != null) {
             if (!mAdapter.isEnabled()) {
-                showWirelessSettingsDialog();
+                Util.showWirelessSettingsDialog(this);
             }
             mAdapter.enableForegroundDispatch(this, mPendingIntent, null, null);
             mAdapter.enableForegroundNdefPush(this, mNdefPushMessage);
@@ -126,24 +124,6 @@ public class TagViewer extends Activity {
             mAdapter.disableForegroundDispatch(this);
             mAdapter.disableForegroundNdefPush(this);
         }
-    }
-
-    private void showWirelessSettingsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.nfc_disabled);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-                startActivity(intent);
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
-            }
-        });
-        builder.create().show();
-        return;
     }
 
     private void resolveIntent(Intent intent) {
@@ -303,6 +283,10 @@ public class TagViewer extends Activity {
         switch (item.getItemId()) {
             case R.id.menu_main_clear:
               menuMainClearClick();
+              return true;
+            case R.id.menu_main_format:
+              menuMainFormatClick();
+              return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -315,6 +299,11 @@ public class TagViewer extends Activity {
                 mTagContent.removeViewAt(i);
             }
         }
+    }
+
+    private void menuMainFormatClick() {
+        // Show format activity
+    	startActivity(new Intent(this, TagFormatter.class));
     }
 
     @Override

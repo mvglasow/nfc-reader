@@ -1,5 +1,13 @@
 package com.vonglasow.michael.nfc_reader;
 
+import com.vonglasow.michael.nfc_reader.R;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
+
 public class Util {
 
 	public static String getHex(byte[] bytes) {
@@ -55,4 +63,21 @@ public class Util {
 		return "Payload: " + (isText ? new String(array) : getHex(array));
 	}
 
+	static void showWirelessSettingsDialog(final Activity activity) {
+	    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+	    builder.setMessage(R.string.nfc_disabled);
+	    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialogInterface, int i) {
+	            Intent intent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+	            activity.startActivity(intent);
+	        }
+	    });
+	    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialogInterface, int i) {
+	            activity.finish();
+	        }
+	    });
+	    builder.create().show();
+	    return;
+	}
 }
