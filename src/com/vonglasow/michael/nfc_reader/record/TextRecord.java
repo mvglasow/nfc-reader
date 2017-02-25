@@ -45,7 +45,8 @@ public class TextRecord implements ParsedNdefRecord {
 
     public View getView(Activity activity, LayoutInflater inflater, ViewGroup parent, int offset) {
         TextView text = (TextView) inflater.inflate(R.layout.tag_text, parent, false);
-        text.setText(mText);
+        String data = "TNF_WELL_KNOWN\nType: RTD_TEXT\nPayload:\n" + mText;
+        text.setText(data);
         return text;
     }
 
