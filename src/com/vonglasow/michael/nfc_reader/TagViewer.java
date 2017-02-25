@@ -140,19 +140,19 @@ public class TagViewer extends Activity {
             byte[] empty = new byte[0];
             byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
             Parcelable tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            String output = intent.toString();
+            String output = "\n" + dumpTagData(tag);
+            output = output + "\n" + intent.toString();
             if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
             	output = output + "\nData: " + intent.getDataString();
             	output = output + "\nType: " + intent.getType();
             }
-            output = output + "\n" + intent.getExtras().toString() + "\n" + Util.getHex(id) + "\nOther recipients:";
+            output = output + "\n" + intent.getExtras().toString() + "\nOther recipients:";
             for (ResolveInfo ri : lri) {
             	output = output + "\n" + ri.activityInfo.name;
             	if (ri.activityInfo.name.equals(intent.getComponent().getClassName()))
             		output = output + " (this Activity)";
             }
-            byte[] dumpedIntent = (output).getBytes();
-            NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, dumpedIntent);
+            NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, output.getBytes());
             NdefMessage msg = new NdefMessage(new NdefRecord[] { record });
                     
             if (rawMsgs != null) {
