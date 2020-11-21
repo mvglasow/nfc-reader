@@ -27,8 +27,6 @@ import com.vonglasow.michael.nfc_reader.record.ParsedNdefRecord;
 
 import android.view.*;
 
-import com.vonglasow.michael.nfc_reader.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
