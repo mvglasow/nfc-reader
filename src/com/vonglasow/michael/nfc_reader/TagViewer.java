@@ -196,36 +196,41 @@ public class TagViewer extends Activity {
         }
         sb.delete(sb.length() - 2, sb.length());
         for (String tech : tag.getTechList()) {
-            if (tech.equals(MifareClassic.class.getName())) {
-                sb.append('\n');
-                MifareClassic mifareTag = MifareClassic.get(tag);
-                String type = "Unknown";
-                switch (mifareTag.getType()) {
-                case MifareClassic.TYPE_CLASSIC:
-                    type = "Classic";
-                    break;
-                case MifareClassic.TYPE_PLUS:
-                    type = "Plus";
-                    break;
-                case MifareClassic.TYPE_PRO:
-                    type = "Pro";
-                    break;
-                }
-                sb.append("Mifare Classic type: ");
-                sb.append(type);
-                sb.append('\n');
+        	if (tech.equals(MifareClassic.class.getName()))
+        		try {
+        			sb.append('\n');
+        			MifareClassic mifareTag = MifareClassic.get(tag);
+        			String type = "Unknown";
+        			switch (mifareTag.getType()) {
+        			case MifareClassic.TYPE_CLASSIC:
+        				type = "Classic";
+        				break;
+        			case MifareClassic.TYPE_PLUS:
+        				type = "Plus";
+        				break;
+        			case MifareClassic.TYPE_PRO:
+        				type = "Pro";
+        				break;
+        			}
+        			sb.append("Mifare Classic type: ");
+        			sb.append(type);
+        			sb.append('\n');
 
-                sb.append("Mifare size: ");
-                sb.append(mifareTag.getSize() + " bytes");
-                sb.append('\n');
+        			sb.append("Mifare size: ");
+        			sb.append(mifareTag.getSize() + " bytes");
+        			sb.append('\n');
 
-                sb.append("Mifare sectors: ");
-                sb.append(mifareTag.getSectorCount());
-                sb.append('\n');
+        			sb.append("Mifare sectors: ");
+        			sb.append(mifareTag.getSectorCount());
+        			sb.append('\n');
 
-                sb.append("Mifare blocks: ");
-                sb.append(mifareTag.getBlockCount());
-            }
+        			sb.append("Mifare blocks: ");
+        			sb.append(mifareTag.getBlockCount());
+        		} catch (Exception e) {
+        			sb.append('\n').append(e.toString());
+        			for (StackTraceElement ste : e.getStackTrace())
+        				sb.append('\n').append("    at ").append(ste.toString());
+        		}
 
             if (tech.equals(MifareUltralight.class.getName())) {
                 sb.append('\n');
