@@ -194,8 +194,8 @@ public class TagViewer extends Activity {
         }
         sb.delete(sb.length() - 2, sb.length());
         for (String tech : tag.getTechList()) {
-        	if (tech.equals(MifareClassic.class.getName()))
-        		try {
+        	try {
+        		if (tech.equals(MifareClassic.class.getName())) {
         			sb.append('\n');
         			MifareClassic mifareTag = MifareClassic.get(tag);
         			String type = "Unknown";
@@ -224,47 +224,49 @@ public class TagViewer extends Activity {
 
         			sb.append("Mifare blocks: ");
         			sb.append(mifareTag.getBlockCount());
-        		} catch (Exception e) {
-        			sb.append('\n').append(e.toString());
-        			for (StackTraceElement ste : e.getStackTrace())
-        				sb.append('\n').append("    at ").append(ste.toString());
         		}
 
-            if (tech.equals(MifareUltralight.class.getName())) {
-                sb.append('\n');
-                MifareUltralight mifareUlTag = MifareUltralight.get(tag);
-                String type = "Unknown";
-                switch (mifareUlTag.getType()) {
-                case MifareUltralight.TYPE_ULTRALIGHT:
-                    type = "Ultralight";
-                    break;
-                case MifareUltralight.TYPE_ULTRALIGHT_C:
-                    type = "Ultralight C";
-                    break;
-                }
-                sb.append("Mifare Ultralight type: ");
-                sb.append(type);
-            }
-            
-            if (tech.equals(Ndef.class.getName())) {
-            	sb.append('\n');
-            	Ndef ndefTag = Ndef.get(tag);
-            	
-            	sb.append("Ndef writable: ");
-            	sb.append(ndefTag.isWritable());
-                sb.append('\n');
-            	
-            	sb.append("Ndef canMakeReadOnly: ");
-            	sb.append(ndefTag.canMakeReadOnly());
-                sb.append('\n');
-            	
-            	sb.append("Ndef type: ");
-            	sb.append(ndefTag.getType());
-                sb.append('\n');
-            	
-            	sb.append("Ndef max size: ");
-            	sb.append(ndefTag.getMaxSize());
-            }
+        		if (tech.equals(MifareUltralight.class.getName())) {
+        			sb.append('\n');
+        			MifareUltralight mifareUlTag = MifareUltralight.get(tag);
+        			String type = "Unknown";
+        			switch (mifareUlTag.getType()) {
+        			case MifareUltralight.TYPE_ULTRALIGHT:
+        				type = "Ultralight";
+        				break;
+        			case MifareUltralight.TYPE_ULTRALIGHT_C:
+        				type = "Ultralight C";
+        				break;
+        			}
+        			sb.append("Mifare Ultralight type: ");
+        			sb.append(type);
+        		}
+
+        		if (tech.equals(Ndef.class.getName())) {
+        			sb.append('\n');
+        			Ndef ndefTag = Ndef.get(tag);
+
+        			sb.append("Ndef writable: ");
+        			sb.append(ndefTag.isWritable());
+        			sb.append('\n');
+
+        			sb.append("Ndef canMakeReadOnly: ");
+        			sb.append(ndefTag.canMakeReadOnly());
+        			sb.append('\n');
+
+        			sb.append("Ndef type: ");
+        			sb.append(ndefTag.getType());
+        			sb.append('\n');
+
+        			sb.append("Ndef max size: ");
+        			sb.append(ndefTag.getMaxSize());
+        		}
+        	} catch (Exception e) {
+        		sb.append('\n').append(e.toString());
+        		for (StackTraceElement ste : e.getStackTrace())
+        			sb.append('\n').append("    at ").append(ste.toString());
+        		e.printStackTrace();
+        	}
         }
 
         return sb.toString();
