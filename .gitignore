@@ -1,5 +1,7 @@
 proguard.cfg
 default.properties
+.gradle/
 bin/
+build/
 gen/
 *.DS_Store
