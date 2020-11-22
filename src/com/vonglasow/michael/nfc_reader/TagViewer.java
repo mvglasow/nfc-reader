@@ -197,7 +197,17 @@ public class TagViewer extends Activity {
         	try {
         		if (tech.equals(MifareClassic.class.getName())) {
         			sb.append('\n');
-        			MifareClassic mifareTag = MifareClassic.get(tag);
+        			MifareClassic mifareTag;
+        			try {
+        				mifareTag = MifareClassic.get(tag);
+        			} catch (Exception e) {
+        				/*
+        				 * Fix for exceptions thrown on some phones, including Sony Xperia Z3/Z5
+        				 * and phones running LineageOS 17.1
+        				 */
+        				tag = Util.cleanupTag(tag);
+        				mifareTag = MifareClassic.get(tag);
+        			}
         			String type = "Unknown";
         			switch (mifareTag.getType()) {
         			case MifareClassic.TYPE_CLASSIC:
